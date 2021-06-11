@@ -58,6 +58,7 @@ export function SchedulingDetails() {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const [loading, setLoading] = useState(false);
   const { car, dates } = route.params as ParamsProps;
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
     {} as RentalPeriod,
@@ -70,11 +71,22 @@ export function SchedulingDetails() {
 
   async function handleConfirmScheduling() {
     try {
+      setLoading(true);
       const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
       const unavailable_dates = [
         ...schedulesByCar.data.unavailable_dates,
         ...dates,
       ];
+
+      await api.post('schedules_byuser', {
+        user_id: 1,
+        car,
+        startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
+        endDate: format(
+          getPlatformDate(new Date(dates[dates.length - 1])),
+          'dd/MM/yyyy',
+        ),
+      });
 
       const response = await api.put(`/schedules_bycars/${car.id}`, {
         id: car.id,
@@ -85,6 +97,7 @@ export function SchedulingDetails() {
         navigation.navigate('SchedulingComplete');
       }
     } catch (err) {
+      setLoading(false);
       Alert.alert('Não foi possível confirmar o agendamento');
     }
   }
@@ -172,6 +185,8 @@ export function SchedulingDetails() {
             title="Alugar agora"
             color={theme.colors.success}
             onPress={handleConfirmScheduling}
+            enabled={!loading}
+            loading={loading}
           />
         </Footer>
       </CarImages>
