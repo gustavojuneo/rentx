@@ -6,7 +6,7 @@
     "web": "expo start --web",
     "start": "react-native start",
     "test": "jest",
-    "server": "json-server ./src/services/server.json --host 192.168.1.2 --port 3333 --delay 700"
+    "server": "json-server ./src/services/server.json --host 192.168.0.15 --port 3333 --delay 700"
   },
   "dependencies": {
     "@expo-google-fonts/archivo": "^0.1.0",
@@ -46,6 +46,7 @@
     "@types/styled-components-react-native": "^5.1.1",
     "babel-preset-expo": "~8.3.0",
     "jest-expo": "~41.0.0",
+    "json-server": "^0.17.0",
     "react-native-svg-transformer": "^0.14.3",
     "typescript": "~4.0.0"
   },
