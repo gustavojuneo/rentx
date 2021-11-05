@@ -61,7 +61,7 @@ export function SchedulingDetails() {
   const [loading, setLoading] = useState(false);
   const { car, dates } = route.params as ParamsProps;
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
-    {} as RentalPeriod,
+    {} as RentalPeriod
   );
   const rentTotal = Number(dates.length * car.rent.price);
 
@@ -84,7 +84,7 @@ export function SchedulingDetails() {
         startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
         endDate: format(
           getPlatformDate(new Date(dates[dates.length - 1])),
-          'dd/MM/yyyy',
+          'dd/MM/yyyy'
         ),
       });
 
@@ -94,7 +94,11 @@ export function SchedulingDetails() {
       });
 
       if (response.status === 200) {
-        navigation.navigate('SchedulingComplete');
+        navigation.navigate('Confirmation', {
+          title: 'Carro alugado!',
+          message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`,
+          nextScreenRoute: 'Home',
+        });
       }
     } catch (err) {
       setLoading(false);
@@ -107,7 +111,7 @@ export function SchedulingDetails() {
       start: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
       end: format(
         getPlatformDate(new Date(dates[dates.length - 1])),
-        'dd/MM/yyyy',
+        'dd/MM/yyyy'
       ),
     });
   }, []);
