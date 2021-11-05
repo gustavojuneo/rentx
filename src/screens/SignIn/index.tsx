@@ -8,9 +8,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
-
 import { useTheme } from 'styled-components';
 
+import { useAuth } from '../../contexts/hooks';
+import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 
 import {
@@ -24,18 +25,18 @@ import {
   SignInButton,
   SignOutButton,
 } from './styles';
-import { Input } from '../../components/Input';
 
 export function SignIn() {
   const theme = useTheme();
+  const { signIn } = useAuth();
   const { navigate } = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSigning, setIsSigning] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const handleSignIn = async () => {
     try {
-      setIsSigning(true);
+      setIsWaiting(true);
       const schema = Yup.object().shape({
         email: Yup.string()
           .required('E-mail obrigatório')
@@ -43,10 +44,10 @@ export function SignIn() {
         password: Yup.string().required('Senha obrigatória'),
       });
 
-      await schema.validate({
-        email,
-        password,
-      });
+      const data = { email, password };
+      await schema.validate(data);
+
+      await signIn(data);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa', error.message);
@@ -57,7 +58,7 @@ export function SignIn() {
         );
       }
     } finally {
-      setIsSigning(false);
+      setIsWaiting(false);
     }
   };
 
@@ -106,7 +107,7 @@ export function SignIn() {
               <Button
                 title="Login"
                 onPress={handleSignIn}
-                loading={isSigning}
+                loading={isWaiting}
               />
             </SignInButton>
             <SignOutButton>
