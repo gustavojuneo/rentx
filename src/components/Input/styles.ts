@@ -1,12 +1,22 @@
+import styled, { css } from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TextInput } from 'react-native';
-import styled from 'styled-components/native';
 
-export const Container = styled.View`
-  width: 100%;
+interface ContainerProps {
+  isFocused: boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
   height: 56px;
 
   flex-direction: row;
+
+  ${({ isFocused, theme }) =>
+    isFocused &&
+    css`
+      border-bottom-width: 2px;
+      border-bottom-color: ${theme.colors.main};
+    `};
 `;
 
 export const IconContainer = styled.View`
