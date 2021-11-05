@@ -57,8 +57,6 @@ export function SignIn() {
           'Ocorreu um erro ao fazer login, verifique as credenciais'
         );
       }
-    } finally {
-      setIsWaiting(false);
     }
   };
 

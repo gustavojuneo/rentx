@@ -1,6 +1,12 @@
-export interface AccessoriesDTO {
+export interface AccessoryDTO {
+  id: string;
   type: string;
   name: string;
+}
+
+export interface PhotoDTO {
+  id: string;
+  photo: string;
 }
 
 export interface CarDTO {
@@ -8,12 +14,10 @@ export interface CarDTO {
   brand: string;
   name: string;
   about: string;
-  rent: {
-    period: string;
-    price: number;
-  };
+  period: string;
+  price: number;
   fuel_type: string;
   thumbnail: string;
-  accessories: AccessoriesDTO[];
-  photos: string[];
+  accessories: AccessoryDTO[];
+  photos: PhotoDTO[];
 }

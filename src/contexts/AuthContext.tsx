@@ -1,11 +1,12 @@
 import React, { createContext, useState, ReactNode } from 'react';
+import { Alert } from 'react-native';
 
-import { User } from '../dtos/UserDTO';
+import { UserDTO } from '../dtos/UserDTO';
 import { api } from '../services/api';
 
 interface AuthState {
   token: string;
-  user: User;
+  user: UserDTO;
 }
 
 interface SignInCredentials {
@@ -14,7 +15,7 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-  user: User;
+  user: UserDTO;
   signIn: (credentials: SignInCredentials) => Promise<void>;
 }
 
@@ -28,9 +29,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
 
   const signIn = async ({ email, password }: SignInCredentials) => {
-    const response = await api.post('/sessions', { email, password });
+    try {
+      const response = await api.post<AuthState>('/sessions', {
+        email,
+        password,
+      });
+      const { token } = response.data;
 
-    console.log(response.data);
+      api.defaults.headers.authorization = `Bearer ${token}`;
+      setData(response.data);
+    } catch (err) {
+      console.log(err);
+      Alert.alert(
+        'Opa',
+        'Não foi possível autenticar, por favor verificar as credencias!'
+      );
+    }
   };
 
   return (
