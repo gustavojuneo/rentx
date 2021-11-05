@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 import { useTheme } from 'styled-components';
 
-import { useAuth } from '../../contexts/hooks';
+import { useAuth } from '../../hooks';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 
