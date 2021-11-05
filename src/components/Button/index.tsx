@@ -8,15 +8,14 @@ interface ButtonProps extends RectButtonProps {
   title: string;
   color?: string;
   light?: boolean;
-  enabled?: boolean;
   loading?: boolean;
 }
 
 export function Button({
   title,
   color,
+  enabled = false,
   light = false,
-  enabled = true,
   loading = false,
   ...rest
 }: ButtonProps) {
@@ -26,7 +25,6 @@ export function Button({
     <Container
       {...rest}
       color={color}
-      enabled={enabled}
       style={{ opacity: enabled === false || loading === true ? 0.5 : 1 }}
     >
       {loading ? (
