@@ -46,13 +46,13 @@ export function Scheduling() {
   const route = useRoute();
   const { car } = route.params as ParamsProps;
   const [lastSelectedDate, setLastSelectedDate] = useState<DayProps>(
-    {} as DayProps,
+    {} as DayProps
   );
   const [markedDates, setMarkedDates] = useState<MarkedDateProps>(
-    {} as MarkedDateProps,
+    {} as MarkedDateProps
   );
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
-    {} as RentalPeriod,
+    {} as RentalPeriod
   );
 
   function handleBack() {
@@ -60,10 +60,13 @@ export function Scheduling() {
   }
 
   function handleSchedulingDetails() {
-    navigation.navigate('SchedulingDetails', {
-      car,
-      dates: Object.keys(markedDates),
-    });
+    navigation.navigate(
+      'SchedulingDetails' as never,
+      {
+        car,
+        dates: Object.keys(markedDates),
+      } as never
+    );
   }
 
   function handleChangeDate(date: DayProps) {
@@ -85,7 +88,7 @@ export function Scheduling() {
     setRentalPeriod({
       startFormatted: format(
         getPlatformDate(new Date(firstDate)),
-        'dd/MM/yyyy',
+        'dd/MM/yyyy'
       ),
       endFormatted: format(getPlatformDate(new Date(endDate)), 'dd/MM/yyyy'),
     });

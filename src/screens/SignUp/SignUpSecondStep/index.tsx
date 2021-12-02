@@ -72,11 +72,14 @@ export function SignUpSecondStep() {
       await api
         .post('/users', data)
         .then(() => {
-          navigation.navigate('Confirmation', {
-            title: 'Conta criada!',
-            message: `Agora é só fazer login\ne aproveitar`,
-            nextScreenRoute: 'SignIn',
-          });
+          navigation.navigate(
+            'Confirmation' as never,
+            {
+              title: 'Conta criada!',
+              message: `Agora é só fazer login\ne aproveitar`,
+              nextScreenRoute: 'SignIn',
+            } as never
+          );
         })
         .catch(() =>
           Alert.alert('Opa', 'Não foi possível cadastrar o usuário!')

@@ -46,7 +46,7 @@ export function Splash() {
   }));
 
   function startApp() {
-    navigation.navigate('SignIn');
+    navigation.navigate('SignIn' as never);
   }
 
   useEffect(() => {

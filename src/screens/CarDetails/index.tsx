@@ -64,7 +64,7 @@ export function CarDetails() {
   }
 
   function handleChooseRental() {
-    navigation.navigate('Scheduling', { car });
+    navigation.navigate('Scheduling' as never, { car } as never);
   }
 
   return (

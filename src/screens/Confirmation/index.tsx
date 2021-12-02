@@ -23,7 +23,7 @@ export function Confirmation() {
   const { title, message, nextScreenRoute } = route.params as Params;
 
   function handleConfirm() {
-    navigation.navigate(nextScreenRoute);
+    navigation.navigate(nextScreenRoute as never);
   }
 
   return (

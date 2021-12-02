@@ -1,41 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/core';
-import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Logo from '../../assets/logo.svg';
+import { FlatList } from 'react-native';
 
 import { api } from '../../services/api';
 import { CarDTO } from '../../dtos/CarDTO';
 import { Car } from '../../components/Car';
 import { LoadAnimation } from '../../components/LoadAnimation';
 
-import { Container, Header, HeaderContent, TotalCars, CarList } from './styles';
+import { Container, Header, HeaderContent, TotalCars } from './styles';
 
 export function Home() {
   const navigation = useNavigation();
-  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [cars, setCars] = useState<CarDTO[]>([]);
 
   function handleCarDetails(car: CarDTO) {
-    navigation.navigate('CarDetails', { car });
-  }
-
-  async function getCars() {
-    try {
-      const { data } = await api.get('cars');
-      setCars(data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+    navigation.navigate('CarDetails' as never, { car } as never);
   }
 
   useEffect(() => {
+    let isMounted = true;
+
+    async function getCars() {
+      try {
+        const { data } = await api.get('cars');
+        if (isMounted) {
+          setCars(data);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
     getCars();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -52,7 +59,9 @@ export function Home() {
       {loading ? (
         <LoadAnimation />
       ) : (
-        <CarList
+        <FlatList
+          contentContainerStyle={{ padding: 24 }}
+          showsVerticalScrollIndicator={false}
           data={cars}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (

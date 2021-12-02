@@ -48,7 +48,7 @@ export function SignUpFirstStep() {
       const data = { name, email, driverLicense };
       await schema.validate(data);
 
-      navigation.navigate('SignUpSecondStep', { user: data });
+      navigation.navigate('SignUpSecondStep' as never, { user: data } as never);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa', error.message);

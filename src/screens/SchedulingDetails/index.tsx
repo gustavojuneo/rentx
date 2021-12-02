@@ -105,7 +105,6 @@ export function SchedulingDetails() {
       }
     } catch (err) {
       setLoading(false);
-      console.log(err);
       Alert.alert('Não foi possível confirmar o agendamento');
     }
   }
