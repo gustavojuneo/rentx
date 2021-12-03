@@ -92,3 +92,10 @@ export const Footer = styled.View`
   background-color: ${({ theme }) => theme.colors.background_primary};
   padding: 24px 24px ${getBottomSpace() + 24}px;
 `;
+
+export const OfflineInfo = styled.Text`
+  color: ${({ theme }) => theme.colors.main};
+  font-family: ${({ theme }) => theme.fonts.primary_400};
+  font-size: ${RFValue(10)}px;
+  text-align: center;
+`;

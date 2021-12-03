@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { StatusBar } from 'expo-status-bar';
 
 import {
   Container,
@@ -40,6 +42,7 @@ export function Profile() {
   const { user, signOut, updateUser } = useAuth();
   const theme = useTheme();
   const navigation = useNavigation();
+  const netInfo = useNetInfo();
   const [option, setOption] = useState<Option>('dataEdit');
   const [avatar, setAvatar] = useState(user.avatar);
   const [name, setName] = useState(user.name);
@@ -67,7 +70,14 @@ export function Profile() {
   };
 
   const handleOptionChange = (selectedOption: Option) => {
-    setOption(selectedOption);
+    if (netInfo.isConnected === false && selectedOption === 'passwordEdit') {
+      Alert.alert(
+        'Você está Offline',
+        'Para mudar a senha, conecte-se a Internet!'
+      );
+    } else {
+      setOption(selectedOption);
+    }
   };
 
   const handleSelectAvatar = async () => {
@@ -125,6 +135,8 @@ export function Profile() {
     <KeyboardAvoidingView behavior="position" enabled>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
+          <StatusBar style="light" />
+
           <Header>
             <HeaderTop>
               <BackButton color={theme.colors.shape} onPress={handleBack} />
