@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from 'styled-components';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useIsFocused } from '@react-navigation/core';
 import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons';
+import { FlatList } from 'react-native';
+import { format, parseISO } from 'date-fns';
 
 import { api } from '../../services/api';
 import { Car as ModelCar } from '../../database/model/Car';
@@ -20,7 +22,6 @@ import {
   Appointments,
   AppointmentTitle,
   AppointmentQuantity,
-  CarList,
   CarWrapper,
   CarFooter,
   CarFooterTitle,
@@ -28,38 +29,53 @@ import {
   CarFooterDate,
 } from './styles';
 
-interface CarProps {
+interface DataProps {
   id: string;
-  user_id: string;
   car: ModelCar;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
 }
 
 export function MyCars() {
   const navigation = useNavigation();
   const theme = useTheme();
-  const [cars, setCars] = useState<CarProps[]>([]);
+  const screenIsFocus = useIsFocused();
+  const [cars, setCars] = useState<DataProps[]>([]);
   const [loading, setLoading] = useState(true);
 
   function handleBack() {
     navigation.goBack();
   }
 
-  async function getCars() {
-    try {
-      const response = await api.get(`schedules_byuser?user_id=${1}`);
-      setCars(response.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    getCars();
-  }, []);
+    let isMounted = true;
+    async function fetchCars() {
+      try {
+        const response = await api.get('rentals');
+        const dataFormatted = response.data.map((data: DataProps) => {
+          return {
+            car: data.car,
+            id: data.id,
+            start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
+            end_date: format(parseISO(data.end_date), 'dd/MM/yyyy'),
+          };
+        });
+        if (isMounted) {
+          setCars(dataFormatted);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+    fetchCars();
+    return () => {
+      isMounted = false;
+    };
+  }, [screenIsFocus]);
 
   return (
     <Container>
@@ -83,8 +99,10 @@ export function MyCars() {
             <AppointmentQuantity>{cars.length}</AppointmentQuantity>
           </Appointments>
 
-          <CarList
+          <FlatList
             data={cars}
+            contentContainerStyle={{ padding: 24 }}
+            showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <CarWrapper>
@@ -92,14 +110,14 @@ export function MyCars() {
                 <CarFooter>
                   <CarFooterTitle>Período</CarFooterTitle>
                   <CarFooterPeriod>
-                    <CarFooterDate>{item.startDate}</CarFooterDate>
+                    <CarFooterDate>{item.start_date}</CarFooterDate>
                     <AntDesign
                       name="arrowright"
                       size={20}
                       color={theme.colors.title}
                       style={{ marginHorizontal: 10 }}
                     />
-                    <CarFooterDate>{item.endDate}</CarFooterDate>
+                    <CarFooterDate>{item.end_date}</CarFooterDate>
                   </CarFooterPeriod>
                 </CarFooter>
               </CarWrapper>

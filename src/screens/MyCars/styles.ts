@@ -2,12 +2,12 @@ import styled from 'styled-components/native';
 import { FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Car as ModelCar } from '../../database/model/Car';
+import { CarDTO } from '../../dtos/CarDTO';
 
 interface CarProps {
   id: string;
   user_id: string;
-  car: ModelCar;
+  car: CarDTO;
   startDate: string;
   endDate: string;
 }
@@ -73,13 +73,6 @@ export const AppointmentQuantity = styled.Text`
   font-family: ${({ theme }) => theme.fonts.primary_500};
   font-size: ${RFValue(15)}px;
 `;
-
-export const CarList = styled(FlatList as new () => FlatList<CarProps>).attrs({
-  contentContainerStyle: {
-    padding: 24,
-  },
-  showsVerticalScrollIndicator: false,
-})``;
 
 export const CarWrapper = styled.View`
   margin-bottom: 16px;
