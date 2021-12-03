@@ -13,6 +13,8 @@ interface SignInCredentials {
 interface AuthContextData {
   user: UserDTO;
   signIn: (credentials: SignInCredentials) => Promise<void>;
+  signOut: () => Promise<void>;
+  updateUser: (user: UserDTO) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -24,6 +26,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [data, setData] = useState<UserDTO>({} as UserDTO);
 
+  const getUserCollectionFromDatabase = () => database.get<ModelUser>('users');
+
   const signIn = async ({ email, password }: SignInCredentials) => {
     try {
       const response = await api.post('/sessions', {
@@ -33,7 +37,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const { token, user } = response.data;
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      const userCollection = database.get<ModelUser>('users');
+      const userCollection = getUserCollectionFromDatabase();
       await database.write(async () => {
         await userCollection.create(newUser => {
           (newUser.user_id = user.id),
@@ -51,9 +55,41 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signOut = async () => {
+    try {
+      const userCollection = getUserCollectionFromDatabase();
+      await database.write(async () => {
+        const userSelected = await userCollection.find(data.id);
+        await userSelected.destroyPermanently();
+      });
+
+      setData({} as UserDTO);
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  };
+
+  const updateUser = async (user: UserDTO) => {
+    try {
+      const userCollection = getUserCollectionFromDatabase();
+      await database.write(async () => {
+        const userSelected = await userCollection.find(data.id);
+        await userSelected.update(userData => {
+          (userData.name = user.name),
+            (userData.driver_license = user.driver_license),
+            (userData.avatar = user.avatar);
+        });
+      });
+
+      setData(user);
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  };
+
   useEffect(() => {
     async function loadUserData() {
-      const userCollection = database.get<ModelUser>('users');
+      const userCollection = getUserCollectionFromDatabase();
       const response = await userCollection.query().fetch();
 
       if (response.length > 0) {
@@ -68,7 +104,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data, signIn }}>
+    <AuthContext.Provider value={{ user: data, signIn, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,6 +4,6 @@ export interface UserDTO {
   email: string;
   name: string;
   driver_license: string;
-  avatar: string | null;
+  avatar: string;
   token: string;
 }

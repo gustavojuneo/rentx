@@ -9,9 +9,16 @@ interface InputProps extends TextInputProps {
   iconName: React.ComponentProps<typeof Feather>['name'];
   password?: boolean;
   value?: string;
+  readOnly?: boolean;
 }
 
-export function Input({ iconName, password, value, ...rest }: InputProps) {
+export function Input({
+  iconName,
+  password,
+  value,
+  readOnly = false,
+  ...rest
+}: InputProps) {
   const theme = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(password);
   const [isFocused, setIsFocused] = useState(false);
@@ -47,6 +54,8 @@ export function Input({ iconName, password, value, ...rest }: InputProps) {
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         isFocused={isFocused}
+        editable={!readOnly}
+        autoCorrect={password ? false : rest.autoCorrect}
         {...rest}
       />
       {password && (
