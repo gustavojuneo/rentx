@@ -2,12 +2,12 @@ import styled from 'styled-components/native';
 import { FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/model/Car';
 
 interface CarProps {
   id: string;
   user_id: string;
-  car: CarDTO;
+  car: ModelCar;
   startDate: string;
   endDate: string;
 }

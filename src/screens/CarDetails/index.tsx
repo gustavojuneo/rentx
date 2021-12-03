@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
-import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/model/Car';
 
 import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
@@ -38,7 +38,7 @@ import {
 } from './styles';
 
 interface ParamsProps {
-  car: CarDTO;
+  car: ModelCar;
 }
 
 export function CarDetails() {

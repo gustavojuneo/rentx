@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons';
 
 import { api } from '../../services/api';
-import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/model/Car';
 
 import { BackButton } from '../../components/BackButton';
 import { LoadAnimation } from '../../components/LoadAnimation';
@@ -31,7 +31,7 @@ import {
 interface CarProps {
   id: string;
   user_id: string;
-  car: CarDTO;
+  car: ModelCar;
   startDate: string;
   endDate: string;
 }

@@ -15,6 +15,7 @@ interface AuthContextData {
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   updateUser: (user: UserDTO) => Promise<void>;
+  loading: boolean;
 }
 
 interface AuthProviderProps {
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [data, setData] = useState<UserDTO>({} as UserDTO);
+  const [loading, setLoading] = useState(true);
 
   const getUserCollectionFromDatabase = () => database.get<ModelUser>('users');
 
@@ -98,13 +100,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           'Authorization'
         ] = `Bearer ${userData.token}`;
         setData(userData);
+        setLoading(false);
       }
     }
     loadUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data, signIn, signOut, updateUser }}>
+    <AuthContext.Provider
+      value={{ user: data, loading, signIn, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

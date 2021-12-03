@@ -29,7 +29,7 @@ import {
   Content,
   Footer,
 } from './styles';
-import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/model/Car';
 
 interface RentalPeriod {
   startFormatted: string;
@@ -37,7 +37,7 @@ interface RentalPeriod {
 }
 
 interface ParamsProps {
-  car: CarDTO;
+  car: ModelCar;
 }
 
 export function Scheduling() {

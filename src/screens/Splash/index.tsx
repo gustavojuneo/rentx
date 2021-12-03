@@ -10,12 +10,15 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 
+import { useAuth } from '../../hooks';
+
 import BrandSvg from '../../assets/brand.svg';
 import LogoSvg from '../../assets/logo.svg';
 
 import { Container } from './styles';
 
 export function Splash() {
+  const { user } = useAuth();
   const navigation = useNavigation();
   const splashAnimation = useSharedValue(0);
   const brandStyle = useAnimatedStyle(() => ({
